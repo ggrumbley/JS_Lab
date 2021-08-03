@@ -13,10 +13,16 @@
       "reminder": true
     },
     {
-      "id": 4,
-      "text": "Boogy on down!",
-      "day": "August 2nd at 5:30pm",
-      "reminder": false
+      "text": "Bob Dole",
+      "day": "Tomorrow",
+      "reminder": true,
+      "id": 5
+    },
+    {
+      "text": "Dance",
+      "day": "TOmorrow! 9:30",
+      "reminder": true,
+      "id": 6
     }
   ]
 }
