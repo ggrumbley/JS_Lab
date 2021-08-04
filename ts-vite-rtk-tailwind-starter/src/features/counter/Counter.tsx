@@ -19,7 +19,7 @@ export function Counter() {
   const incrementValue = Number(incrementAmount) || 0;
 
   return (
-    <div>
+    <div className="card shadow-2xl bg-base-100" data-theme="synthwave">
       <div className={styles.row}>
         <button
           className={styles.button}
