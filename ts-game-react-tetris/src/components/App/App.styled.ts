@@ -13,6 +13,7 @@ export const TetrisDiv = styled.div`
   align-items: center;
   padding: 40px;
   margin: 0 auto;
+
   .display {
     display: flex;
     justify-content: space-between;
