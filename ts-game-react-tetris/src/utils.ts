@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { STAGE_WIDTH, STAGE_HEIGHT, TETROMINOS } from '../constants';
+import { STAGE_WIDTH, STAGE_HEIGHT, TETROMINOS } from './constants';
 
 export const createStage = () =>
   Array.from(Array(STAGE_HEIGHT), () => Array(STAGE_WIDTH).fill([0, 'clear']));

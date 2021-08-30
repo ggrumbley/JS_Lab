@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import * as S from './Display.styles';
 
 interface DisplayProps {
-  gameOver: boolean;
+  gameOver?: boolean;
   text: string;
 }
 

@@ -8,9 +8,5 @@ interface CellProps {
 }
 
 export const Cell: React.FC<CellProps> = React.memo(function Cell({ type }) {
-  return (
-    <S.CellDiv type={type} color={TETROMINOS[type].color}>
-      Hello
-    </S.CellDiv>
-  );
+  return <S.CellDiv type={type} color={TETROMINOS[type].color} />;
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Cell } from '../Cell/Cell';
+import { Cell } from '../Cell';
 import { TETROMINOS } from '../../constants';
 
 import * as S from './PlayArea.styles';

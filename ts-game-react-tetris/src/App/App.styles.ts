@@ -14,7 +14,7 @@ export const TetrisDiv = styled.div`
   padding: 40px;
   margin: 0 auto;
 
-  .display {
+  & > div:first-child {
     display: flex;
     justify-content: space-between;
     width: 380px;
