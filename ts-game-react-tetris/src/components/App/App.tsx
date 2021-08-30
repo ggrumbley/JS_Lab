@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as S from './App.styled';
+import * as S from './App.styles';
 
 export const App: React.FC = () => (
   <S.TetrisWrapperDiv role="button" tabIndex={0}>
