@@ -1,6 +1,10 @@
-export const STAGE_WIDTH = 12;
-export const STAGE_HEIGHT = 20;
+export const PLAY_AREA_WIDTH = 12;
+export const PLAY_AREA_HEIGHT = 20;
 export const ROWPOINTS = [40, 100, 300, 1200];
+
+// Actions
+export const CLEAR = 'CLEAR';
+export const MERGED = 'MERGED';
 
 export const TETROMINOS = {
   0: { shape: [[0]], color: '0, 0, 0' },

@@ -4,7 +4,7 @@ import * as S from './App.styles';
 import { Display } from '../components/Display';
 import { PlayArea } from '../components/PlayArea';
 import { StartButton } from '../components/StartButton';
-import { createStage } from '../utils';
+import { createPlayArea } from '../utils';
 
 export const App: React.FC = () => {
   const [dropTime, setDroptime] = React.useState<null | number>(null);
@@ -27,7 +27,7 @@ export const App: React.FC = () => {
             </>
           )}
         </div>
-        <PlayArea stage={createStage()} />
+        <PlayArea playAreaGrid={createPlayArea()} />
       </S.TetrisDiv>
     </S.TetrisWrapperDiv>
   );
