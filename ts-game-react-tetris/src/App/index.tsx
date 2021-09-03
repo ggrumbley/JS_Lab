@@ -4,7 +4,14 @@ import * as S from './App.styles';
 import { Display } from '../components/Display';
 import { PlayArea } from '../components/PlayArea';
 import { StartButton } from '../components/StartButton';
-import { createPlayArea, usePlayer, usePlayArea, useInterval, isColliding } from '../utils';
+import {
+  createPlayArea,
+  usePlayer,
+  usePlayArea,
+  useGameStatus,
+  useInterval,
+  isColliding,
+} from '../utils';
 import { KEYS } from '../constants';
 
 export const App: React.FC = () => {
@@ -13,7 +20,8 @@ export const App: React.FC = () => {
   const gameArea = React.useRef<HTMLDivElement>(null);
 
   const { player, playerRotate, updatePlayerPos, resetPlayer } = usePlayer();
-  const { playArea, setPlayArea } = usePlayArea(player, resetPlayer);
+  const { playArea, setPlayArea, rowsCleared } = usePlayArea(player, resetPlayer);
+  const { score, setScore, rows, setRows, level, setLevel } = useGameStatus(rowsCleared);
 
   const movePlayer = (direction: number) => {
     if (isColliding(player, playArea, { x: direction, y: 0 })) return;
@@ -43,8 +51,10 @@ export const App: React.FC = () => {
   };
 
   const keyUp = ({ keyCode }: { keyCode: number }): void => {
+    if (gameOver) return;
+
     if (keyCode === KEYS.DOWN_ARROW) {
-      setDroptime(1000);
+      setDroptime(1000 / level + 200);
     }
   };
 
@@ -53,10 +63,20 @@ export const App: React.FC = () => {
     setPlayArea(createPlayArea());
     setDroptime(1000);
     resetPlayer();
+    setScore(0);
+    setLevel(1);
+    setRows(0);
     setGameOver(false);
   };
 
   const drop = (): void => {
+    // Increase level when player has cleared 10 rows
+    if (rows > level * 10) {
+      setLevel((prev) => prev + 1);
+      // Also increase speed
+      setDroptime(1000 / level + 200);
+    }
+
     if (!isColliding(player, playArea, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
@@ -85,9 +105,9 @@ export const App: React.FC = () => {
             </>
           ) : (
             <>
-              <Display text={`Score: `} />
-              <Display text={`Rows: `} />
-              <Display text={`Level: `} />
+              <Display text={`Score: ${score}`} />
+              <Display text={`Rows: ${rows}`} />
+              <Display text={`Level: ${level}`} />
             </>
           )}
         </div>

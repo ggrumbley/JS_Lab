@@ -1,6 +1,13 @@
 import * as React from 'react';
 
-import { PLAY_AREA_WIDTH, PLAY_AREA_HEIGHT, TETROMINOS, CLEAR, MERGED } from './constants';
+import {
+  PLAY_AREA_WIDTH,
+  PLAY_AREA_HEIGHT,
+  TETROMINOS,
+  CLEAR,
+  MERGED,
+  ROW_POINTS,
+} from './constants';
 import { Player, PlayAreaCell, PlayAreaGrid } from './types';
 
 export const createPlayArea = () =>
@@ -177,4 +184,19 @@ export const usePlayArea = (player: Player, resetPlayer: () => void) => {
   }, [player.collided, player.tetromino, player.pos?.x, player.pos?.y]);
 
   return { playArea, setPlayArea, rowsCleared };
+};
+
+export const useGameStatus = (rowsCleared: number) => {
+  const [score, setScore] = React.useState(0);
+  const [rows, setRows] = React.useState(0);
+  const [level, setLevel] = React.useState(1);
+
+  React.useEffect(() => {
+    if (rowsCleared > 0) {
+      setScore((prev) => prev + ROW_POINTS[rowsCleared - 1] * level);
+      setRows((prev) => prev + rowsCleared);
+    }
+  }, [rowsCleared, level]);
+
+  return { score, setScore, rows, setRows, level, setLevel };
 };

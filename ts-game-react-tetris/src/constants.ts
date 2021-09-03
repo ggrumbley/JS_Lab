@@ -1,6 +1,6 @@
 export const PLAY_AREA_WIDTH = 12;
 export const PLAY_AREA_HEIGHT = 20;
-export const ROWPOINTS = [40, 100, 300, 1200];
+export const ROW_POINTS = [40, 100, 300, 1200];
 
 // Actions
 export const CLEAR = 'CLEAR';
