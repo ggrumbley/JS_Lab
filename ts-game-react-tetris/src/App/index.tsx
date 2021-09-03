@@ -12,7 +12,7 @@ export const App: React.FC = () => {
   const [gameOver, setGameOver] = React.useState(true);
   const gameArea = React.useRef<HTMLDivElement>(null);
 
-  const { player, updatePlayerPos, resetPlayer } = usePlayer();
+  const { player, playerRotate, updatePlayerPos, resetPlayer } = usePlayer();
   const { playArea, setPlayArea } = usePlayArea(player, resetPlayer);
 
   const movePlayer = (direction: number) => {
@@ -22,11 +22,14 @@ export const App: React.FC = () => {
   };
 
   const move = ({ keyCode, repeat }: { keyCode: number; repeat: boolean }): void => {
+    if (gameOver) return;
+
     switch (keyCode) {
       case KEYS.LEFT_ARROW:
         movePlayer(-1);
         return;
       case KEYS.RIGHT_ARROW:
+        console.log(player.pos.x);
         movePlayer(1);
         return;
       case KEYS.DOWN_ARROW:
@@ -34,9 +37,7 @@ export const App: React.FC = () => {
         setDroptime(30);
         return;
       case KEYS.UP_ARROW:
-        console.log(keyCode, 'Rotate piece');
-        return;
-      default:
+        playerRotate(playArea);
         return;
     }
   };

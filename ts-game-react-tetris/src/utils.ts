@@ -19,8 +19,8 @@ export const isColliding = (
   { x: moveX, y: moveY }: { x: number; y: number },
 ) => {
   for (let y = 0; y < player.tetromino.length; y++) {
-    for (let x = 0; x < player.tetromino[y].length; x++)
-      if (typeof player.tetromino[y][x] === 'string') {
+    for (let x = 0; x < player.tetromino[y].length; x++) {
+      if (player.tetromino[y][x] !== 0) {
         if (
           !playArea[y + player.pos.y + moveY] ||
           !playArea[y + player.pos.y + moveY][x + player.pos.x + moveX] ||
@@ -29,6 +29,7 @@ export const isColliding = (
           return true;
         }
       }
+    }
   }
 
   return false;
@@ -63,6 +64,35 @@ export const useInterval = (callback: () => void, delay: number | null) => {
 export const usePlayer = () => {
   const [player, setPlayer] = React.useState<Player>({} as Player);
 
+  const _rotate = (matrix: Player['tetromino']) => {
+    // Transpose rows to columns
+    const _matrix = matrix.map((_, i) => matrix.map((column) => column[i]));
+
+    // Reverse each row to get a rotated matrix
+    return _matrix.map((row) => row.reverse());
+  };
+
+  const playerRotate = (playArea: PlayAreaGrid): void => {
+    const _player = JSON.parse(JSON.stringify(player));
+    _player.tetromino = _rotate(_player.tetromino);
+
+    const posX = _player.pos.x;
+    let offset = 1;
+
+    while (isColliding(_player, playArea, { x: 0, y: 0 })) {
+      _player.pos.x += offset;
+      offset = -(offset + (offset > 0 ? 1 : -1));
+
+      if (offset > _player.tetromino[0].length) {
+        _player.pos.x = posX;
+
+        return;
+      }
+    }
+
+    setPlayer(_player);
+  };
+
   const updatePlayerPos = ({
     x,
     y,
@@ -95,7 +125,7 @@ export const usePlayer = () => {
     [],
   );
 
-  return { player, updatePlayerPos, resetPlayer };
+  return { player, playerRotate, updatePlayerPos, resetPlayer };
 };
 
 export const usePlayArea = (player: Player, resetPlayer: () => void) => {
@@ -115,6 +145,7 @@ export const usePlayArea = (player: Player, resetPlayer: () => void) => {
           acc.unshift(new Array(newPlayArea[0].length).fill([0, CLEAR]) as PlayAreaCell[]);
         }
         acc.push(row);
+
         return acc;
       }, [] as PlayAreaGrid);
 
@@ -143,7 +174,7 @@ export const usePlayArea = (player: Player, resetPlayer: () => void) => {
     };
 
     setPlayArea((prev) => updatePlayArea(prev));
-  }, [player.collided, player.pos, player.tetromino, player.pos?.x, player.pos?.y, resetPlayer]);
+  }, [player.collided, player.tetromino, player.pos?.x, player.pos?.y]);
 
   return { playArea, setPlayArea, rowsCleared };
 };
