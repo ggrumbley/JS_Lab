@@ -13,6 +13,29 @@ export const randomTetromino = () => {
   return TETROMINOS[randTetromino];
 };
 
+export const isColliding = (
+  player: Player,
+  playArea: PlayAreaGrid,
+  { x: moveX, y: moveY }: { x: number; y: number },
+) => {
+  for (let y = 0; y < player.tetromino.length; y++) {
+    for (let x = 0; x < player.tetromino[y].length; x++)
+      if (typeof player.tetromino[y][x] === 'string') {
+        if (
+          !playArea[y + player.pos.y + moveY] ||
+          !playArea[y + player.pos.y + moveY][x + player.pos.x + moveX] ||
+          playArea[y + player.pos.y + moveY][x + player.pos.x + moveX][1] !== CLEAR
+        ) {
+          return true;
+        }
+      }
+  }
+
+  return false;
+};
+
+// Custom React Hooks
+
 export const useInterval = (callback: () => void, delay: number | null) => {
   const savedCallback = React.useRef<null | (() => void)>(null);
 
@@ -120,7 +143,7 @@ export const usePlayArea = (player: Player, resetPlayer: () => void) => {
     };
 
     setPlayArea((prev) => updatePlayArea(prev));
-  }, [player.collided, player.pos, player.tetromino, resetPlayer]);
+  }, [player.collided, player.pos, player.tetromino, player.pos?.x, player.pos?.y, resetPlayer]);
 
   return { playArea, setPlayArea, rowsCleared };
 };

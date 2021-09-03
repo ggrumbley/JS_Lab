@@ -6,6 +6,13 @@ export const ROWPOINTS = [40, 100, 300, 1200];
 export const CLEAR = 'CLEAR';
 export const MERGED = 'MERGED';
 
+export const KEYS = {
+  LEFT_ARROW: 37,
+  UP_ARROW: 38,
+  RIGHT_ARROW: 39,
+  DOWN_ARROW: 40,
+};
+
 export const TETROMINOS = {
   0: { shape: [[0]], color: '0, 0, 0' },
   I: {
