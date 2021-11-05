@@ -23,6 +23,7 @@ export const App: React.FC = () => {
   const { playArea, setPlayArea, rowsCleared } = usePlayArea(player, resetPlayer);
   const { score, setScore, rows, setRows, level, setLevel } = useGameStatus(rowsCleared);
 
+  console.log(playArea);
   const movePlayer = (direction: number) => {
     if (isColliding(player, playArea, { x: direction, y: 0 })) return;
 
