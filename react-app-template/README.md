@@ -35,3 +35,20 @@
 - ESLint
 - Jest
 - Hot Module Replacement
+
+Husky Config
+
+```json
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss}": [
+      "eslint ./src --fix",
+      "git add"
+    ]
+  }
+```

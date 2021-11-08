@@ -4,8 +4,8 @@ import { Header } from './Header';
 import { MainSection } from './MainSection';
 
 export const TodoMVC = () => (
-  <div className="todoapp">
+  <section className="todoapp">
     <Header />
     <MainSection />
-  </div>
+  </section>
 );

@@ -2,6 +2,7 @@ import * as React from 'react';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
 
+// * Purposely demonstrating string enum here
 export enum ACTIONS {
   ADD_TODO = 'ADD_TODO',
   DELETE_TODO = 'DELETE_TODO',
@@ -12,6 +13,7 @@ export enum ACTIONS {
   SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER',
 }
 
+// * Purposely demonstrating const emum here
 export const FILTERS = {
   SHOW_ALL: 'show_all',
   SHOW_COMPLETED: 'show_completed',
@@ -43,7 +45,7 @@ export const storeReducer = produce((draft, action) => {
     case ACTIONS.ADD_TODO:
       draft.todos.push({
         id: nanoid(),
-        text: action.payload,
+        text: action.text,
         completed: false,
       });
       break;
@@ -101,5 +103,4 @@ export const TodoMVCProvider: React.FC = ({ children }) => {
   return <StoreContext.Provider value={storeValue}>{children}</StoreContext.Provider>;
 };
 
-// Export Helper hooks
 export const useTodoMVC = () => React.useContext(StoreContext);
