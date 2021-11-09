@@ -7,7 +7,6 @@ export enum ACTIONS {
   ADD_TODO = 'ADD_TODO',
   DELETE_TODO = 'DELETE_TODO',
   EDIT_TODO = 'EDIT_TODO',
-  COMPLETE_TODO = 'COMPLETE_TODO',
   COMPLETE_ALL_TODOS = 'COMPLETE_ALL_TODOS',
   CLEAR_COMPLETED = 'CLEAR_COMPLETED',
   SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER',
@@ -50,23 +49,21 @@ export const storeReducer = produce((draft, action) => {
       });
       break;
     case ACTIONS.DELETE_TODO:
-      draft.todos.filter((todo) => todo.id !== action.payload);
+      draft.todos = draft.todos.filter((todo) => todo.id !== action.id);
       break;
     case ACTIONS.EDIT_TODO:
-      draft.todos.map((todo) => (todo.id === action.id ? { ...todo, text: action.text } : todo));
-      break;
-    case ACTIONS.COMPLETE_TODO:
-      draft.todos.map((todo) =>
-        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo,
-      );
+      const { id, text, completed } = action.payload;
+      const existingTodo = draft.todos.find((todo) => todo.id === id);
+      if (existingTodo) {
+        existingTodo.text = text;
+        existingTodo.completed = completed;
+      }
       break;
     case ACTIONS.COMPLETE_ALL_TODOS:
-      const areAllMarked = draft.todos.every((todo) => todo.completed);
-      draft.todos.map((todo) => ({ ...todo, completed: !areAllMarked }));
+      draft.todos = draft.todos.map((todo) => ({ ...todo, completed: true }));
       break;
     case ACTIONS.CLEAR_COMPLETED:
-      const unCompletedTodos = draft.todos.filter((todo) => todo.completed === false);
-      draft.todos = unCompletedTodos;
+      draft.todos = draft.todos.filter((todo) => todo.completed === false);
       break;
     case ACTIONS.SET_VISIBILITY_FILTER:
       draft.filterState = action.payload;

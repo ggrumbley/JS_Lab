@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
             <a
               href="./#"
               className={classnames({ selected: title.key === filterState })}
-              onClick={() => dispatch({ type: ACTIONS.SET_VISIBILITY_FILTER, filter: title.key })}
+              onClick={() => dispatch({ type: ACTIONS.SET_VISIBILITY_FILTER, payload: title.key })}
             >
               {title.value}
             </a>
