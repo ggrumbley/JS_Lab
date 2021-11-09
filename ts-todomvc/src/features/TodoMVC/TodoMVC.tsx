@@ -1,11 +1,32 @@
 import * as React from 'react';
 
-import { Header } from './Header';
-import { MainSection } from './MainSection';
+import { useTodoMVC } from './TodoMVC.state';
+import { Header } from './components/Header';
+import { Copyright } from './components/Copyright';
+import { TodoList } from './components/TodoList';
+import { Footer } from './components/Footer';
 
-export const TodoMVC = () => (
-  <section className="todoapp">
-    <Header />
-    <MainSection />
-  </section>
-);
+import './TodoMVC.css';
+
+// TODO: Add useLocalStorage hook and useEffect for persistance
+
+export const TodoMVC = () => {
+  const {
+    state: { todos },
+    dispatch,
+  } = useTodoMVC();
+  return (
+    <>
+      <section className="todoapp">
+        <Header />
+        {!!todos.length && (
+          <>
+            <TodoList />
+            <Footer />
+          </>
+        )}
+      </section>
+      <Copyright />
+    </>
+  );
+};

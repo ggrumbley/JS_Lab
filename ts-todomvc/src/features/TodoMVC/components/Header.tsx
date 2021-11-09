@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useTodoMVC, ACTIONS } from './TodoMVC.state';
+import { useTodoMVC, ACTIONS } from '../TodoMVC.state';
 
 const ENTER_KEY = 'Enter';
 

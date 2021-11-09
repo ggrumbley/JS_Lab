@@ -65,7 +65,8 @@ export const storeReducer = produce((draft, action) => {
       draft.todos.map((todo) => ({ ...todo, completed: !areAllMarked }));
       break;
     case ACTIONS.CLEAR_COMPLETED:
-      draft.todos.filter((todo) => todo.completed === false);
+      const unCompletedTodos = draft.todos.filter((todo) => todo.completed === false);
+      draft.todos = unCompletedTodos;
       break;
     case ACTIONS.SET_VISIBILITY_FILTER:
       draft.filterState = action.payload;
@@ -93,8 +94,8 @@ export const TodoMVCProvider: React.FC = ({ children }) => {
 
   const storeValue = React.useMemo(() => {
     // Debug Logging
-    // console.info('STATE =>', state);
-    // console.info('DISPATCH =>', dispatch);
+    console.info('STATE =>', state);
+    console.info('DISPATCH =>', dispatch);
 
     return { state, dispatch };
   }, [state, dispatch]);
