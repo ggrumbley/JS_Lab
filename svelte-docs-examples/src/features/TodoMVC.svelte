@@ -5,12 +5,14 @@
   const ENTER_KEY = 13;
   const ESCAPE_KEY = 27;
 
+  const STORAGE_KEY = 'SVELTE_TODOS';
+
   let todos = [];
   let currentFilter = 'all';
   let editing = null;
 
   try {
-    todos = JSON.parse(localStorage.getItem('svelte-todos')) || [];
+    todos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   } catch (err) {
     todos = [];
   }
@@ -78,7 +80,7 @@
   $: completedCount = todos.filter((todo) => todo.completed).length;
 
   $: try {
-    localStorage.setItem('svelte-todos', JSON.stringify(todos));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
   } catch (err) {
     console.error(err, 'Whoops!');
   }
