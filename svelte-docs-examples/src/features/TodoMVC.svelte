@@ -1,57 +1,156 @@
 <script>
+  import { nanoid } from 'nanoid';
   import './TodoMVC.css';
 
-  let todos = [
-    { done: false, text: 'finish Svelte tutorial' },
-    { done: true, text: 'build an app' },
-    { done: false, text: 'world domination' }
-  ];
+  const ENTER_KEY = 13;
+  const ESCAPE_KEY = 27;
 
-  const addTodo = () => {
-    todos = todos.concat({ done: false, text: ''})
+  let todos = [];
+  let currentFilter = 'all';
+  let editing = null;
+
+  try {
+    todos = JSON.parse(localStorage.getItem('svelte-todos')) || [];
+  } catch (err) {
+    todos = [];
   }
 
-  const clearTodos = () => {
-    todos = todos.filter(todo => !todo.done)
+  const updateView = () => {
+    currentFilter = 'all';
+    if (window.location.hash === '#/active') {
+      currentFilter = 'active';
+    }
+
+    if (window.location.hash === '#/completed') {
+      currentFilter = 'completed';
+    }
+  };
+
+  window.addEventListener('hashchange', updateView);
+
+  updateView();
+
+  const addTodo = (e) => {
+    if (e.which === ENTER_KEY) {
+      todos = todos.concat({
+        id: nanoid(),
+        description: e.target.value,
+        completed: false,
+      });
+      e.target.value = '';
+    }
+  };
+
+  const handleEdit = (e) => {
+    if (e.which === ENTER_KEY) e.target.blur();
+    if (e.which === ESCAPE_KEY) editing = null;
+  };
+
+  const submitEdit = (e) => {
+    todos[editing].description = e.target.value;
+    editing = null;
+  };
+
+  const removeTodo = (index) => {
+    todos = todos.slice(0, index).concat(todos.slice(index + 1));
+  };
+
+  const toggleAll = (e) => {
+    todos = todos.map((todo) => ({
+      ...todo,
+      completed: e.target.checked,
+    }));
+  };
+
+  const clearCompleted = () => {
+    todos = todos.filter((todo) => !todo.completed);
+  };
+
+  $: filtered =
+    currentFilter === 'all'
+      ? todos
+      : currentFilter === 'completed'
+      ? todos.filter((todo) => todo.completed)
+      : todos.filter((todo) => !todo.completed);
+
+  $: remaining = todos.filter((todo) => !todo.completed).length;
+
+  $: completedCount = todos.filter((todo) => todo.completed).length;
+
+  $: try {
+    localStorage.setItem('svelte-todos', JSON.stringify(todos));
+  } catch (err) {
+    console.error(err, 'Whoops!');
   }
-
-  $: remaining = todos.filter(todo => !todo.done).length
-  $: completedCount = todos.filter(todo => todo.done).length
-
 </script>
+
 <section>
   <div class="todoapp">
     <header class="header">
-      <h1>todos</h1>
-      <input type="text" class="new-todo" placeholder="What needs to be done?">
+      <h1>todos 🚀</h1>
+      <input
+        type="text"
+        class="new-todo"
+        placeholder="What needs to be done?"
+        on:keydown={addTodo}
+      />
     </header>
-    <section class="main">
-      <input type="checkbox" id="toggle-all" class="toggle-all">
-      <label for="toggle-all"></label>
-      <ul class="todo-list">
-        {#each todos as todo}
-          <li class:completed={todo.done}>
-            <div class="view" >
-              <input type="checkbox" class="toggle" bind:checked={todo.done} />
-              <label>{todo.text}</label>
-              <button class="destroy"></button>
-            </div>
-          </li>
-        {/each}
-      </ul>
-    </section>
-    <footer class="footer">
-    <span class="todo-count">
-      <strong>{remaining}</strong>
-      <span>&nbsp;{remaining === 1 ? 'item' : 'items'}&nbsp;left</span>
-    </span>
-    <ul class="filters">
-      <li><a href="./#"></a></li>
-    </ul>
-    {#if !!completedCount}
-      <button class="clear-completed" on:click={clearTodos}>Clear completed</button>
+
+    {#if !!todos.length}
+      <section class="main">
+        <input
+          type="checkbox"
+          id="toggle-all"
+          class="toggle-all"
+          on:change={toggleAll}
+          checked={completedCount === todos.length}
+        />
+        <label for="toggle-all" />
+        <ul class="todo-list">
+          {#each filtered as todo, index (todo.id)}
+            <li class:completed={todo.completed} class:editing={editing === index}>
+              <div class="view">
+                <input type="checkbox" class="toggle" bind:checked={todo.completed} />
+                <label for="edit" on:dblclick={() => (editing = index)}>{todo.description}</label>
+                <button class="destroy" on:click={() => removeTodo(index)} />
+              </div>
+              {#if editing === index}
+                <input
+                  value={todo.description}
+                  id="edit"
+                  class="edit"
+                  on:keydown={handleEdit}
+                  on:blur={submitEdit}
+                />
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      </section>
     {/if}
-    </footer>
+
+    {#if !!todos.length}
+      <footer class="footer">
+        <span class="todo-count">
+          <strong>{remaining}</strong>
+          <span>&nbsp;{remaining === 1 ? 'item' : 'items'}&nbsp;left</span>
+        </span>
+        <ul class="filters">
+          <li><a class={currentFilter === 'all' ? 'selected' : ''} href="#/">All</a></li>
+          <li>
+            <a class={currentFilter === 'active' ? 'selected' : ''} href="#/active">Active</a>
+          </li>
+          <li>
+            <a class={currentFilter === 'completed' ? 'selected' : ''} href="#/completed"
+              >Completed</a
+            >
+          </li>
+        </ul>
+        {#if !!completedCount}
+          <button class="clear-completed" on:click={clearCompleted}>Clear completed</button>
+        {/if}
+      </footer>
+    {/if}
   </div>
 
   <footer class="info">
@@ -64,4 +163,3 @@
     </p>
   </footer>
 </section>
-
