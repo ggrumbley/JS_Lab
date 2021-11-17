@@ -1,4 +1,6 @@
 <script>
+  // TODO: Refactor Todo List to use ID instead of index
+  // TODO: Add fetch Todos feature
   import { nanoid } from 'nanoid';
   import './TodoMVC.css';
 
@@ -7,8 +9,14 @@
 
   const STORAGE_KEY = 'SVELTE_TODOS';
 
+  const FILTERS = {
+    ALL: 'all',
+    ACTIVE: 'active',
+    COMPLETED: 'completed',
+  };
+
   let todos = [];
-  let currentFilter = 'all';
+  let currentFilter = FILTERS.ALL;
   let editing = null;
 
   try {
@@ -18,13 +26,13 @@
   }
 
   const updateView = () => {
-    currentFilter = 'all';
-    if (window.location.hash === '#/active') {
-      currentFilter = 'active';
+    currentFilter = FILTERS.ALL;
+    if (window.location.hash === `#/${FILTERS.ACTIVE}`) {
+      currentFilter = FILTERS.ACTIVE;
     }
 
-    if (window.location.hash === '#/completed') {
-      currentFilter = 'completed';
+    if (window.location.hash === `#/${FILTERS.COMPLETED}`) {
+      currentFilter = FILTERS.COMPLETED;
     }
   };
 
@@ -69,9 +77,9 @@
   };
 
   $: filtered =
-    currentFilter === 'all'
+    currentFilter === FILTERS.ALL
       ? todos
-      : currentFilter === 'completed'
+      : currentFilter === FILTERS.COMPLETED
       ? todos.filter((todo) => todo.completed)
       : todos.filter((todo) => !todo.completed);
 
@@ -89,7 +97,7 @@
 <section>
   <div class="todoapp">
     <header class="header">
-      <h1>todos 🚀</h1>
+      <h1>todos<span>&nbsp;🚀</span></h1>
       <input
         type="text"
         class="new-todo"
@@ -138,15 +146,14 @@
           <span>&nbsp;{remaining === 1 ? 'item' : 'items'}&nbsp;left</span>
         </span>
         <ul class="filters">
-          <li><a class={currentFilter === 'all' ? 'selected' : ''} href="#/">All</a></li>
-          <li>
-            <a class={currentFilter === 'active' ? 'selected' : ''} href="#/active">Active</a>
-          </li>
-          <li>
-            <a class={currentFilter === 'completed' ? 'selected' : ''} href="#/completed"
-              >Completed</a
-            >
-          </li>
+          {#each Object.values(FILTERS) as filter}
+            <li>
+              <a
+                href={`#/${filter === FILTERS.ALL ? '' : filter}`}
+                class:selected={currentFilter === filter}>{filter}</a
+              >
+            </li>
+          {/each}
         </ul>
         {#if !!completedCount}
           <button class="clear-completed" on:click={clearCompleted}>Clear completed</button>
