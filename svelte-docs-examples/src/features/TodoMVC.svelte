@@ -1,11 +1,10 @@
 <script>
-  // TODO: Refactor Todo List to use ID instead of index
-  // TODO: Add fetch Todos feature
   import { nanoid } from 'nanoid';
   import './TodoMVC.css';
 
   const ENTER_KEY = 13;
   const ESCAPE_KEY = 27;
+  const TODOS_API = 'https://jsonplaceholder.typicode.com/users/1/todos?_limit=5';
 
   const STORAGE_KEY = 'SVELTE_TODOS';
 
@@ -26,6 +25,7 @@
   }
 
   const updateView = () => {
+    console.log(window.location.hash);
     currentFilter = FILTERS.ALL;
     if (window.location.hash === `#/${FILTERS.ACTIVE}`) {
       currentFilter = FILTERS.ACTIVE;
@@ -44,7 +44,7 @@
     if (e.which === ENTER_KEY) {
       todos = todos.concat({
         id: nanoid(),
-        description: e.target.value,
+        title: e.target.value,
         completed: false,
       });
       e.target.value = '';
@@ -56,13 +56,13 @@
     if (e.which === ESCAPE_KEY) editing = null;
   };
 
-  const submitEdit = (e) => {
-    todos[editing].description = e.target.value;
+  const submitEdit = (e, index) => {
+    todos[index].title = e.target.value;
     editing = null;
   };
 
-  const removeTodo = (index) => {
-    todos = todos.slice(0, index).concat(todos.slice(index + 1));
+  const removeTodo = (id) => {
+    todos = todos.filter((todo) => todo.id !== id);
   };
 
   const toggleAll = (e) => {
@@ -74,6 +74,22 @@
 
   const clearCompleted = () => {
     todos = todos.filter((todo) => !todo.completed);
+  };
+
+  const fetchTodos = async () => {
+    const res = await fetch(TODOS_API);
+    const newTodos = await res.json();
+
+    newTodos.forEach(({ title, completed }) => {
+      todos = todos.concat({
+        id: nanoid(),
+        title,
+        completed,
+      });
+    });
+
+    console.log(newTodos);
+    console.log(todos);
   };
 
   $: filtered =
@@ -97,7 +113,7 @@
 <section>
   <div class="todoapp">
     <header class="header">
-      <h1>todos<span>&nbsp;🚀</span></h1>
+      <h1 on:click={fetchTodos}>todos&nbsp;🚀</h1>
       <input
         type="text"
         class="new-todo"
@@ -118,19 +134,19 @@
         <label for="toggle-all" />
         <ul class="todo-list">
           {#each filtered as todo, index (todo.id)}
-            <li class:completed={todo.completed} class:editing={editing === index}>
+            <li class:completed={todo.completed} class:editing={editing === todo.id}>
               <div class="view">
                 <input type="checkbox" class="toggle" bind:checked={todo.completed} />
-                <label for="edit" on:dblclick={() => (editing = index)}>{todo.description}</label>
-                <button class="destroy" on:click={() => removeTodo(index)} />
+                <label for="edit" on:dblclick={() => (editing = todo.id)}>{todo.title}</label>
+                <button class="destroy" on:click={() => removeTodo(todo.id)} />
               </div>
-              {#if editing === index}
+              {#if editing === todo.id}
                 <input
-                  value={todo.description}
+                  value={todo.title}
                   id="edit"
                   class="edit"
                   on:keydown={handleEdit}
-                  on:blur={submitEdit}
+                  on:blur={(e) => submitEdit(e, index)}
                 />
               {/if}
             </li>
