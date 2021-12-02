@@ -4,17 +4,20 @@
   import PhotoAlbum from './features/PhotoAlbum.svelte';
   import ChatBot from './features/ChatBot.svelte';
   import Draggable from './features/Draggable.svelte';
+  import FeedbackWidget from './features/FeedbackWidget/FeedbackWidget.svelte';
 </script>
 
 <main>
   <Counter />
+  <FeedbackWidget />
+
   <TodoMVC />
   <ChatBot />
   <PhotoAlbum />
-  <Draggable top={50} left={50}>
+  <!-- <Draggable top={50} left={50}>
     <h1>Drag Me!</h1>
     <h2>💩💩💩</h2>
-  </Draggable>
+  </Draggable> -->
 </main>
 
 <style>
