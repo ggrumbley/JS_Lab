@@ -1,12 +1,10 @@
 <script>
   import { nanoid } from 'nanoid';
-  import { createEventDispatcher } from 'svelte';
 
   import RatingSelect from './RatingSelect.svelte';
   import Card from './Card.svelte';
   import Button from './Button.svelte';
-
-  const dispatch = createEventDispatcher();
+  import { FeedbackStore } from '../FeedbackWidget.store';
 
   let min = 10;
   let rating = 10;
@@ -28,6 +26,7 @@
   };
 
   const handleSelect = (e) => (rating = e.detail);
+
   const handleSubmit = () => {
     if (isInvalidLength) return;
 
@@ -37,7 +36,8 @@
       rating: +rating,
     };
 
-    dispatch('add-feedback', newFeedback);
+    FeedbackStore.update((draft) => [newFeedback, ...draft]);
+
     text = '';
   };
 </script>
