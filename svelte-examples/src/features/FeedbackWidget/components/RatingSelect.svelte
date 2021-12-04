@@ -47,7 +47,7 @@
     background: #f4f4f4;
     width: 50px;
     height: 50px;
-    padding: 10px;
+    /* padding: 10px; */
     text-align: center;
     border-radius: 50%;
     font-size: 19px;
@@ -61,7 +61,7 @@
     left: 50%;
     width: 50px;
     height: 50px;
-    padding: 10px;
+    /* padding: 10px; */
     border-radius: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;

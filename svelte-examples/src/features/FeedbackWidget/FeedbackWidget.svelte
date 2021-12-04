@@ -25,12 +25,20 @@
     const itemId = e.detail;
     feedback = feedback.filter((item) => item.id !== itemId);
   };
+
+  const handleAddFeedback = (e) => {
+    const feedbackItem = e.detail;
+    feedback = [feedbackItem, ...feedback];
+  };
+
+  $: count = feedback.length;
+  $: average = feedback.reduce((acc, { rating }) => acc + rating, 0) / feedback.length;
 </script>
 
 <main>
   <div class="container">
-    <FeedbackForm />
-    <FeedbackStats />
+    <FeedbackForm on:add-feedback={handleAddFeedback} />
+    <FeedbackStats {count} {average} />
     <FeedbackList {feedback} on:delete-feedback={handleDelete} />
   </div>
 </main>
@@ -49,6 +57,7 @@
     background-color: #202142;
     line-height: 1.6;
     color: #fff;
+    padding: 20px;
     /* height: 800px; */
   }
 
