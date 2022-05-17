@@ -1,11 +1,12 @@
 <script>
+  import Inventory from './features/Inventory/Inventory.svelte';
 </script>
 
 <main>
   <div class="app-container">
     <div class="game-screen">Game Screen</div>
     <div class="player-actions">Actions</div>
-    <div>Inventory</div>
+    <Inventory />
   </div>
 </main>
 
