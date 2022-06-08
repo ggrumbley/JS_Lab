@@ -6,6 +6,7 @@ import { Counter } from './features/Counter';
 export const App: Component = () => (
   <>
     <Bookshelf name="Gary" />
+    <br />
     <Counter />
   </>
 );
