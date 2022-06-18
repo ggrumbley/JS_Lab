@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { PostAuthor, TimeAgo, ReactionButtons, fetchPosts, selectPostById, selectPostIds } from '.';
+import { PostAuthor, TimeAgo, ReactionButtons } from '.';
+import { Spinner } from '../../components/Spinner';
+import { useGetPostsQuery } from '../api';
 
-const PostExcerpt = ({ postId }) => {
-  const post = useSelector((state) => selectPostById(state, postId));
-
+let PostExcerpt = ({ post }) => {
   return (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
@@ -24,28 +23,32 @@ const PostExcerpt = ({ postId }) => {
 };
 
 export const PostsList = () => {
-  const dispatch = useDispatch();
-  const orderedPostIds = useSelector(selectPostIds);
-  const postStatus = useSelector((state) => state.posts.status);
-  const error = useSelector((state) => state.posts.error);
+  const { data, isLoading, isSuccess, isError, error } = useGetPostsQuery();
 
-  useEffect(() => {
-    if (postStatus === 'idle') {
-      dispatch(fetchPosts());
-    }
-  }, [postStatus, dispatch]);
+  const sortedPosts = React.useMemo(() => {
+    const posts = data?.posts ?? [];
 
-  const content = (status) => {
-    if (status === 'loading' || status === 'idle') return <div className="loader">Loading...</div>;
-    if (status === 'failed') return <div>{error}</div>;
+    return posts.slice().sort((a, b) => b.date.localeCompare(a.date));
+  }, [data]);
 
-    return orderedPostIds.map((postId) => <PostExcerpt key={postId} postId={postId} />);
-  };
+  let content;
+
+  if (isLoading) {
+    content = <Spinner text="Loading..." />;
+  }
+
+  if (isError) {
+    content = <div>{error.toString()}</div>;
+  }
+
+  if (isSuccess) {
+    content = sortedPosts.map((post) => <PostExcerpt key={post.id} post={post} />);
+  }
 
   return (
     <section>
       <h2>Posts</h2>
-      {content(postStatus)}
+      {content}
     </section>
   );
 };

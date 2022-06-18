@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { postUpdated, selectPostById } from '.';
 
-export const EditPostForm = ({ match }) => {
-  const { postId } = match.params;
+export const EditPostForm = () => {
+  const { postId } = useParams();
 
   const post = useSelector((state) => selectPostById(state, postId));
 
@@ -13,7 +13,7 @@ export const EditPostForm = ({ match }) => {
   const [content, setContent] = useState(post.content);
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
@@ -21,7 +21,7 @@ export const EditPostForm = ({ match }) => {
   const onSavePostClicked = () => {
     if (title && content) {
       dispatch(postUpdated({ id: postId, title, content }));
-      history.push(`/posts/${postId}`);
+      navigate(`/posts/${postId}`);
     }
   };
 
@@ -40,7 +40,14 @@ export const EditPostForm = ({ match }) => {
         />
 
         <label htmlFor="postContent">Content:</label>
-        <textarea name="postContent" id="postContent" cols="30" rows="10" value={content} onChange={onContentChanged} />
+        <textarea
+          name="postContent"
+          id="postContent"
+          cols="30"
+          rows="10"
+          value={content}
+          onChange={onContentChanged}
+        />
       </form>
       <button type="button" onClick={onSavePostClicked}>
         Save Post
