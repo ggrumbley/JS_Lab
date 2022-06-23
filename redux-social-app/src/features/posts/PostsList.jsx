@@ -23,13 +23,11 @@ let PostExcerpt = ({ post }) => {
 };
 
 export const PostsList = () => {
-  const { data, isLoading, isSuccess, isError, error } = useGetPostsQuery();
+  const { data: posts = [], isLoading, isSuccess, isError, error } = useGetPostsQuery();
 
   const sortedPosts = React.useMemo(() => {
-    const posts = data?.posts ?? [];
-
     return posts.slice().sort((a, b) => b.date.localeCompare(a.date));
-  }, [data]);
+  }, [posts]);
 
   let content;
 

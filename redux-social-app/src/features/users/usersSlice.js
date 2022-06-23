@@ -7,16 +7,15 @@ const initialState = usersAdapter.getInitialState();
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   const response = await client.get('/fakeApi/users');
-  console.log(response);
-  return response.users;
+  return response;
 });
 
 const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {},
-  extraReducers: {
-    [fetchUsers.fulfilled]: usersAdapter.setAll,
+  extraReducers(builder) {
+    builder.addCase(fetchUsers.fulfilled, usersAdapter.setAll);
   },
 });
 

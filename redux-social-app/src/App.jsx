@@ -1,15 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { Navbar } from './app/Navbar';
 import { PostsList, EditPostForm, AddPostForm, SinglePostPage } from './features/posts';
-import { fetchUsers, UsersList, UserPage } from './features/users';
+import { UsersList, UserPage } from './features/users';
 import { NotificationsList } from './features/notifications';
 
 function App() {
-  const dispatch = useDispatch();
-  dispatch(fetchUsers());
-
   return (
     <Router>
       <Navbar />

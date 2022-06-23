@@ -8,7 +8,7 @@ import { PostAuthor, TimeAgo, ReactionButtons } from '.';
 
 export const SinglePostPage = () => {
   const { postId } = useParams();
-  const { data, isFetching, isSuccess } = useGetPostQuery(postId);
+  const { data: post, isFetching, isSuccess } = useGetPostQuery(postId);
 
   return (
     <section>
@@ -16,14 +16,14 @@ export const SinglePostPage = () => {
         <Spinner text="Loading..." />
       ) : isSuccess ? (
         <article className="post">
-          <h2>{data.post.title}</h2>
+          <h2>{post.title}</h2>
           <div>
-            <PostAuthor userId={data.post.user} />
-            <TimeAgo timestamp={data.post.date} />
+            <PostAuthor userId={post.user} />
+            <TimeAgo timestamp={post.date} />
           </div>
-          <p className="post-content">{data.post.content}</p>
-          <ReactionButtons post={data.post} />
-          <Link to={`/editPost/${data.post.id}`} className="button muted-button">
+          <p className="post-content">{post.content}</p>
+          <ReactionButtons post={post} />
+          <Link to={`/editPost/${post.id}`} className="button muted-button">
             Edit Post
           </Link>
         </article>
