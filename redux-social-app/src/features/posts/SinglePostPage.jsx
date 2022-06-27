@@ -2,9 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Spinner } from '../../components/Spinner';
-import { useGetPostQuery } from '../api';
-
-import { PostAuthor, TimeAgo, ReactionButtons } from '.';
+import { PostAuthor, TimeAgo, ReactionButtons, useGetPostQuery } from '.';
 
 export const SinglePostPage = () => {
   const { postId } = useParams();

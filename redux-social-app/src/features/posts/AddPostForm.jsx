@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Spinner } from '../../components/Spinner';
-import { useAddNewPostMutation } from '../api';
+import { useAddNewPostMutation } from '.';
 import { selectAllUsers } from '../users';
 
 export const AddPostForm = () => {

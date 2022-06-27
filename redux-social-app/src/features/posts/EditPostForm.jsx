@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { postUpdated, selectPostById } from '.';
+import { Spinner } from '../../components/Spinner';
+import { useGetPostQuery, useEditPostMutation } from '.';
 
 export const EditPostForm = () => {
   const { postId } = useParams();
 
-  const post = useSelector((state) => selectPostById(state, postId));
+  const { data: post } = useGetPostQuery(postId);
+  const [updatePost, { isLoading }] = useEditPostMutation();
 
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
 
-  const onSavePostClicked = () => {
+  const onSavePostClicked = async () => {
     if (title && content) {
-      dispatch(postUpdated({ id: postId, title, content }));
+      updatePost({ id: postId, title, content });
       navigate(`/posts/${postId}`);
     }
   };
@@ -52,6 +52,7 @@ export const EditPostForm = () => {
       <button type="button" onClick={onSavePostClicked}>
         Save Post
       </button>
+      {isLoading && <Spinner text="Loading..." />}
     </section>
   );
 };

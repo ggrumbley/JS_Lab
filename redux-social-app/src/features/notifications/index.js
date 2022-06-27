@@ -1,7 +1,8 @@
 export {
   default as notificationsReducer,
-  fetchNotifications,
-  selectAllNotifications,
+  fetchNotificationsWebsocket,
+  selectNotificationsMetadata,
+  useGetNotificationsQuery,
   allNotificationsRead,
-} from './notificationsSlice';
+} from './notifications.slice';
 export { NotificationsList } from './NotificationsList';

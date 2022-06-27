@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 
-import { PostAuthor, TimeAgo, ReactionButtons } from '.';
+import { PostAuthor, TimeAgo, ReactionButtons, useGetPostsQuery } from '.';
 import { Spinner } from '../../components/Spinner';
-import { useGetPostsQuery } from '../api';
 
 let PostExcerpt = ({ post }) => {
   return (
@@ -23,7 +23,7 @@ let PostExcerpt = ({ post }) => {
 };
 
 export const PostsList = () => {
-  const { data: posts = [], isLoading, isSuccess, isError, error } = useGetPostsQuery();
+  const { data: posts = [], isLoading, isSuccess, isError, isFetching, error } = useGetPostsQuery();
 
   const sortedPosts = React.useMemo(() => {
     return posts.slice().sort((a, b) => b.date.localeCompare(a.date));
@@ -40,7 +40,13 @@ export const PostsList = () => {
   }
 
   if (isSuccess) {
-    content = sortedPosts.map((post) => <PostExcerpt key={post.id} post={post} />);
+    content = (
+      <div className={classnames('posts-container', { disabled: isFetching })}>
+        {sortedPosts.map((post) => (
+          <PostExcerpt key={post.id} post={post} />
+        ))}
+      </div>
+    );
   }
 
   return (

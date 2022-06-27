@@ -5,16 +5,15 @@ import App from './App';
 import store from './app/store';
 import { Provider } from 'react-redux';
 import { worker } from './api/server';
-import { fetchUsers } from './features/users';
+import { usersApiSlice } from './features/users';
 
 async function start() {
   // Initialize mock API server
   await worker.start({ onUnhandledRequest: 'bypass' });
 
-  store.dispatch(fetchUsers());
+  store.dispatch(usersApiSlice.endpoints.getUsers.initiate());
 
-  const container = document.getElementById('root');
-  const root = createRoot(container);
+  const root = createRoot(document.getElementById('root'));
 
   root.render(
     <React.StrictMode>

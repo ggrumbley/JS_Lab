@@ -1,14 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { postsReducer } from '../features/posts';
-import { usersReducer } from '../features/users';
 import { notificationsReducer } from '../features/notifications';
-import { apiSlice } from '../features/api';
+import { apiSlice } from './api.slice';
 
 export default configureStore({
   reducer: {
-    posts: postsReducer,
-    users: usersReducer,
     notifications: notificationsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

@@ -1,3 +1,3 @@
-export { default as usersReducer, fetchUsers, selectAllUsers, selectUserById } from './usersSlice';
+export { selectAllUsers, selectUserById, useGetUsersQuery, usersApiSlice } from './users.slice';
 export { UsersList } from './UsersList';
-export { UserPage } from './UserPage';
+export { UsersPage } from './UsersPage';
