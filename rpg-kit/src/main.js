@@ -4,8 +4,9 @@ import { resources } from './Resources'
 import { Sprite } from './Sprite'
 import { Vector2 } from './Vector2'
 import './style.css'
-import { gridCells } from './utils/grid'
+import { gridCells, isSpaceFree } from './utils/grid'
 import { moveTowards } from './utils/moveTowards'
+import { walls } from './levels/level1'
 
 const canvas = document.querySelector('#game-canvas')
 const ctx = canvas.getContext('2d')
@@ -73,8 +74,11 @@ const tryMove = () => {
       break
   }
 
-  heroDesinationPosition.x = nextX
-  heroDesinationPosition.y = nextY
+  // * Validate the next desination is a legal move
+  if (isSpaceFree(walls, nextX, nextY)) {
+    heroDesinationPosition.x = nextX
+    heroDesinationPosition.y = nextY
+  }
 }
 
 const draw = () => {
