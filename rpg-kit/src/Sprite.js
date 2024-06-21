@@ -9,6 +9,7 @@ export class Sprite {
     frame = 0, // * which frame we want to show
     scale = 1, // * how large to draw this image
     position = new Vector2(0, 0), // * where to draw it (top left corner)
+    animations = null,
   }) {
     this.resource = resource
     this.frameSize = frameSize
@@ -18,6 +19,7 @@ export class Sprite {
     this.frameMap = new Map()
     this.scale = scale
     this.position = position
+    this.animations = animations
 
     // * Build frameMap on Class init
     this.buildFrameMap()
@@ -37,6 +39,13 @@ export class Sprite {
         frameCount++
       }
     }
+  }
+
+  step(delta) {
+    if (!this.animations) return
+
+    this.animations.step(delta)
+    this.frame = this.animations.frame
   }
 
   drawImage(ctx, x, y) {
